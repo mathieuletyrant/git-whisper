@@ -5,7 +5,10 @@
   "keywords": [
     "github",
     "cli",
-    "typescript"
+    "typescript",
+    "openrouter",
+    "claude",
+    "ia"
   ],
   "author": "Mathieu Le Tyrant <mathieu.letyrant@gmail.com>",
   "main": "dist/index.js",
