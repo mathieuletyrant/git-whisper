@@ -1,24 +1,17 @@
 import axios, { AxiosInstance } from 'axios';
-import { retry, handleWhen } from 'cockatiel';
 
 import { CommitMessageTooLongError, NotFollowStandardError } from './openrouter.errors.js';
-import { CLIOptions } from '../types/cli.js';
-
-const retryableErrors = [CommitMessageTooLongError, NotFollowStandardError];
-
-const retryPolicy = retry(
-  handleWhen((error) => retryableErrors.some((retryableError) => error instanceof retryableError)),
-  { maxAttempts: 3 },
-);
 
 export class OpenRouterProvider {
+  private MAX_RETRIES = 3;
+
   private openRouterClient: AxiosInstance;
 
-  constructor(private readonly cliOptions: CLIOptions) {
+  constructor(private readonly params: { apiKey: string; model: string }) {
     this.openRouterClient = axios.create({
       baseURL: 'https://openrouter.ai/api/v1',
       headers: {
-        Authorization: `Bearer ${this.cliOptions.apiKey}`,
+        Authorization: `Bearer ${this.params.apiKey}`,
         'HTTP-Referer': 'https://github.com/mathieuletyrant/git-whisper',
         'X-Title': 'git-whisper',
         'Content-Type': 'application/json',
@@ -33,13 +26,24 @@ export class OpenRouterProvider {
    * Throw a CommitMessageTooLongError if the commit message is longer than 50 characters.
    * Throw a NotFollowStandardError if the commit message does not follow the standard format.
    */
-  public async getCommitMessage(staged: string): Promise<string> {
-    return retryPolicy.execute(() => this.privateGetCommitMessage(staged));
+  public async getCommitMessage(staged: string, count: number = 0): Promise<string> {
+    try {
+      return await this.privateGetCommitMessage(staged);
+    } catch (error) {
+      if (error instanceof CommitMessageTooLongError && count <= this.MAX_RETRIES) {
+        return this.getCommitMessage(staged, count + 1);
+      }
+      if (error instanceof NotFollowStandardError && count <= this.MAX_RETRIES) {
+        return this.getCommitMessage(staged, count + 1);
+      }
+
+      throw error;
+    }
   }
 
   private async privateGetCommitMessage(staged: string): Promise<string> {
     const { data } = await this.openRouterClient.post('/chat/completions', {
-      model: this.cliOptions.model,
+      model: this.params.model,
       messages: [
         {
           role: 'user',
