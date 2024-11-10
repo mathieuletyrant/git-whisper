@@ -30,6 +30,8 @@ echo 'export GIT_WHISPER_OPENROUTER_API_KEY="your-api-key-here"' >> ~/.zprofile
 source ~/.zprofile
 ```
 
+3. You can now use the `git-whisper` or `gw` command in your terminal.
+
 ## 🧪 Testing Locally
 
 To test Git Whisper locally, follow these steps:
@@ -46,7 +48,7 @@ To test Git Whisper locally, follow these steps:
    npm link
    ```
 
-3. You can now use the `git-whisper` command in your terminal.
+3. You can now use the `git-whisper` or `gw` command in your terminal.
 
 ## 🛠️ Tech Stack
 

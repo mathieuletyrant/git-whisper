@@ -7,6 +7,8 @@ import { generateCommitMessage } from './commands/generate.js';
 
 const program = new Command();
 
+const options = program.opts<CLIOptions>();
+
 program
   .version('1.0.0')
   .description(
@@ -18,10 +20,13 @@ program
 program
   .command('generate')
   .description('Generate a commit message based on staged changes')
-  .action(async () => {
-    const options = program.opts<CLIOptions>();
-
-    await generateCommitMessage(options);
+  .action(() => {
+    return generateCommitMessage(options);
   });
+
+// Set the default command to 'generate'
+program.action(() => {
+  return generateCommitMessage(options);
+});
 
 program.parse(process.argv);
