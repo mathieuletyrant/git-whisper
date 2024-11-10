@@ -1,11 +1,10 @@
 import { GitProvider, OpenRouterProvider } from '../providers/index.js';
-import { CLIOptions } from '../types/cli.js';
 
 /**
  * Command to generate a commit message based on staged changes.
  */
-export const generateCommitMessage = async (cliOptions: CLIOptions) => {
-  const openRouterProvider = new OpenRouterProvider(cliOptions);
+export const generateCommitMessage = async (config: { apiKey: string; model: string }) => {
+  const openRouterProvider = new OpenRouterProvider(config);
   const gitProvider = new GitProvider();
 
   try {

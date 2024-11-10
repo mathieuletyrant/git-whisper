@@ -1,27 +1,47 @@
 #!/usr/bin/env node
 import { Command } from 'commander';
 
-import { CLIOptions } from './types/cli.js';
-
 import { generateCommitMessage } from './commands/generate.js';
+import { Config } from './config.js';
+
+Config.initialize();
 
 const program = new Command();
-
-const options = program.opts<CLIOptions>();
 
 program
   .version('1.0.7')
   .description(
     'Git Whisper is an intelligent CLI tool that generates meaningful and consistent commit messages using AI. Stop struggling with commit message writing and let AI help you create clear, concise, and conventional commits.',
-  )
-  .option('--apiKey, <apiKey>', 'Specify the API key for OpenRouter', process.env.GIT_WHISPER_OPENROUTER_API_KEY)
-  .option('--model <model>', 'Specify the model to use', 'anthropic/claude-3-5-haiku');
+  );
+
+program
+  .command('config')
+  .description('Configure Git Whisper')
+  .requiredOption('-k, --apiKey <apiKey>', 'Specify the OpenRouter API key')
+  .requiredOption('-m, --model <model>', 'Specify the model to use')
+  .action((options) => {
+    Config.updateConfig(options);
+  });
 
 program
   .command('generate')
   .description('Generate a commit message based on staged changes')
+  .option('-m, --model <model>', 'Override the default model')
   .action(() => {
-    return generateCommitMessage(options);
+    const config = Config.getConfig();
+    const options = program.opts<{ model?: string }>();
+
+    if (!config.apiKey) {
+      console.error('Please configure Git Whisper with an API key.');
+      return;
+    }
+
+    if (!options.model && !config.model) {
+      console.error('Please specify a model or configure a default model.');
+      return;
+    }
+
+    return generateCommitMessage({ ...config, ...options });
   });
 
 program.parse(process.argv);
