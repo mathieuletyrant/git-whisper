@@ -14,9 +14,26 @@ Git Whisper is an intelligent CLI tool that generates meaningful and consistent 
 
 Git Whisper aims to streamline the git workflow by eliminating the cognitive load of writing commit messages. It helps developers maintain consistent and professional commit history while saving time.
 
+## 🧪 Testing Locally
+
+To test Git Whisper locally, follow these steps:
+
+1. Build the project:
+    ```sh
+    npm run build
+    ```
+
+2. Link the package globally:
+    ```sh
+    npm link
+    ```
+
+3. You can now use the `git-whisper` command in your terminal.
+
 ## 🛠️ Tech Stack
 
-N/A
+- NodeJS
+- OpenRouter
 
 ## 🚧 Status
 
