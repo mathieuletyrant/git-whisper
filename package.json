@@ -4,16 +4,20 @@
   "description": "A CLI tool for GitHub operations",
   "keywords": [
     "github",
+    "git",
     "cli",
+    "ai-assistant",
+    "code-review",
+    "pull-request",
     "typescript",
     "openrouter",
-    "claude",
-    "ia"
+    "claude"
   ],
   "author": "Mathieu Le Tyrant <mathieu.letyrant@gmail.com>",
   "main": "dist/index.js",
   "type": "module",
   "license": "MIT",
+  "homepage": "https://github.com/mathieuletyrant/git-whisper",
   "bin": {
     "git-whisper": "dist/index.js",
     "gw": "dist/index.js"
