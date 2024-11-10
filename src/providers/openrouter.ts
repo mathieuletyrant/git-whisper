@@ -6,7 +6,7 @@ const openRouterClient = axios.create({
   baseURL: 'https://openrouter.ai/api/v1',
   headers: {
     Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
-    'HTTP-Referer': '', // @TODO: Add your referer here
+    'HTTP-Referer': 'https://github.com/mathieuletyrant/git-whisper',
     'X-Title': 'git-whisper',
     'Content-Type': 'application/json',
   },
