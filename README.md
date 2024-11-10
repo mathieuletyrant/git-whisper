@@ -28,12 +28,14 @@ npm install git-whisper -g
 gw config --apiKey your-api-key-here --model anthropic/claude-3-5-haiku
 ```
 
+This command will create a configuration file at `~/.git-whisper/config.json` to store your API key and preferred model settings.
+
 ```bash
 # Generate commit message
-gw
+gw generate
 
 # Generate commit message with another LLM
-gw --model anthropic/claude-3.5-sonnet
+gw --model anthropic/claude-3.5-sonnet generate
 ```
 
 ## 🧪 Testing Locally

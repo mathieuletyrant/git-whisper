@@ -8,7 +8,7 @@ interface ConfigData {
 }
 
 export class Config {
-  private static readonly CONFIG_DIR = join(homedir(), 'git-whisper');
+  private static readonly CONFIG_DIR = join(homedir(), '.git-whisper');
   private static readonly CONFIG_PATH = join(Config.CONFIG_DIR, 'config.json');
 
   private static defaultConfig: ConfigData = {
