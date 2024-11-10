@@ -2,11 +2,7 @@ import { execSync } from 'child_process';
 
 import { EmptyStagedError } from './git.errors.js';
 
-type GitProvider = {
-  getStaged(): string;
-};
-
-export const gitProvider: GitProvider = {
+export class GitProvider {
   /**
    * This function returns the staged changes in the git repository.
    * The function uses the `git diff --staged` command to get the staged changes.
@@ -14,7 +10,7 @@ export const gitProvider: GitProvider = {
    * Possible errors:
    * Throw an EmptyStagedError if there are no staged changes.
    */
-  getStaged() {
+  public getStagedChanges(): string {
     const result = execSync('git diff --staged');
 
     if (result.length === 0) {
@@ -22,5 +18,20 @@ export const gitProvider: GitProvider = {
     }
 
     return result.toString();
-  },
-};
+  }
+
+  /**
+   * Create a git commit with the given message
+   */
+  public commit(message: string, dryRun = false): void {
+    const command = `git commit -m "${message}"`;
+
+    if (dryRun) {
+      console.log(command);
+      return;
+    }
+
+    execSync(command);
+    return;
+  }
+}

@@ -1,40 +1,55 @@
-import axios from 'axios';
+import axios, { AxiosInstance } from 'axios';
+import { retry, handleWhen } from 'cockatiel';
 
 import { CommitMessageTooLongError, NotFollowStandardError } from './openrouter.errors.js';
+import { CLIOptions } from '../types/cli.js';
 
-const openRouterClient = axios.create({
-  baseURL: 'https://openrouter.ai/api/v1',
-  headers: {
-    Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
-    'HTTP-Referer': 'https://github.com/mathieuletyrant/git-whisper',
-    'X-Title': 'git-whisper',
-    'Content-Type': 'application/json',
-  },
-});
+const retryableErrors = [CommitMessageTooLongError, NotFollowStandardError];
 
-type OpenRouterProvider = {
-  getCommitMessage(staged: string): Promise<string>;
-};
+const retryPolicy = retry(
+  handleWhen((error) => retryableErrors.some((retryableError) => error instanceof retryableError)),
+  { maxAttempts: 3 },
+);
 
-export const openRouterProvider: OpenRouterProvider = {
+export class OpenRouterProvider {
+  private openRouterClient: AxiosInstance;
+
+  constructor(private readonly cliOptions: CLIOptions) {
+    this.openRouterClient = axios.create({
+      baseURL: 'https://openrouter.ai/api/v1',
+      headers: {
+        Authorization: `Bearer ${this.cliOptions.apiKey}`,
+        'HTTP-Referer': 'https://github.com/mathieuletyrant/git-whisper',
+        'X-Title': 'git-whisper',
+        'Content-Type': 'application/json',
+      },
+    });
+  }
+
   /**
    * This function returns the commit message based on the staged changes.
    *
    * Possible errors:
    * Throw a CommitMessageTooLongError if the commit message is longer than 50 characters.
+   * Throw a NotFollowStandardError if the commit message does not follow the standard format.
    */
-  async getCommitMessage(staged: string) {
-    const { data } = await openRouterClient.post('/chat/completions', {
-      model: 'anthropic/claude-3-5-haiku',
+  public async getCommitMessage(staged: string): Promise<string> {
+    return retryPolicy.execute(() => this.privateGetCommitMessage(staged));
+  }
+
+  private async privateGetCommitMessage(staged: string): Promise<string> {
+    const { data } = await this.openRouterClient.post('/chat/completions', {
+      model: this.cliOptions.model,
       messages: [
         {
           role: 'user',
           content: `
-            Follow this strict format for your git message (max 50 characters):
+            Your are an amazing developer! And you need based on the staged changes write a commit message
 
+            The message should be short and descriptive and strictly follow the format below:
             <type>(<scope>): <description>
 
-            Available types:
+            Here is the list of types you can use:
             - feat: new feature
             - fix: bug fix
             - docs: documentation
@@ -43,15 +58,18 @@ export const openRouterProvider: OpenRouterProvider = {
             - test: adding tests
             - chore: maintenance
 
-            Example:
-            feat(auth): add login form
-            fix(api): fix timeout error
-            docs(readme): update install
+            Example that works:
+            - feat(auth): add login form
+            - fix(api): fix timeout error
+            - docs(readme): update install
 
-            Use only these prefixes and keep the message short and descriptive.
-            Return only the commit message.
+            Rules for you to follow: 
+            - Use only these prefixes and keep the message short and descriptive.
+            - Return only the commit message.
+            - The message your return should not be longer than 50 characters.    
+            - If the message is longer than 50 characters, try again.        
 
-            Here are the pending changes:
+            Here is the staged changes:
             ${staged}
           `,
         },
@@ -64,18 +82,10 @@ export const openRouterProvider: OpenRouterProvider = {
       throw new CommitMessageTooLongError(commitMessage);
     }
 
-    if (
-      commitMessage.startsWith('feat') ||
-      commitMessage.startsWith('fix') ||
-      commitMessage.startsWith('docs') ||
-      commitMessage.startsWith('style') ||
-      commitMessage.startsWith('refactor') ||
-      commitMessage.startsWith('test') ||
-      commitMessage.startsWith('chore')
-    ) {
+    if (['feat', 'fix', 'docs', 'style', 'refactor', 'test', 'chore'].every((type) => !commitMessage.startsWith(type))) {
       throw new NotFollowStandardError(commitMessage);
     }
 
     return commitMessage;
-  },
-};
+  }
+}
