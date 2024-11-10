@@ -1,6 +1,6 @@
 {
   "name": "git-whisper",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "A CLI tool for GitHub operations",
   "keywords": [
     "github",
