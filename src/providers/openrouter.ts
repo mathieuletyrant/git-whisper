@@ -1,6 +1,21 @@
 import axios, { AxiosInstance } from 'axios';
 
-import { CommitMessageTooLongError, NotFollowStandardError } from './openrouter.errors.js';
+export class CommitMessageTooLongError extends Error {
+  public readonly commitMessageLength: number;
+
+  constructor(public readonly commitMessage: string) {
+    super();
+    this.name = 'CommitMessageTooLongError';
+    this.commitMessageLength = commitMessage.length;
+  }
+}
+
+export class NotFollowStandardError extends Error {
+  constructor(public readonly commitMessage: string) {
+    super();
+    this.name = 'NotFollowStandardError';
+  }
+}
 
 export class OpenRouterProvider {
   private MAX_RETRIES = 3;

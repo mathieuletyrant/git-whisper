@@ -1,6 +1,11 @@
 import { execSync } from 'child_process';
 
-import { EmptyStagedError } from './git.errors.js';
+export class EmptyStagedError extends Error {
+  constructor() {
+    super();
+    this.name = 'EmptyStagedError';
+  }
+}
 
 export class GitProvider {
   /**
