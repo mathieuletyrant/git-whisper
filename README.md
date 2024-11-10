@@ -30,6 +30,8 @@ gw config --apiKey your-api-key-here --model anthropic/claude-3-5-haiku
 
 This command will create a configuration file at `~/.git-whisper/config.json` to store your API key and preferred model settings.
 
+3. Use the CLI ❤️
+
 ```bash
 # Generate commit message
 gw generate
