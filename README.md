@@ -60,11 +60,3 @@ To test Git Whisper locally, follow these steps:
 
 - NodeJS
 - OpenRouter
-
-## 🚧 Status
-
-Currently in active development. Contributors welcome!
-
----
-
-📄 License: MIT
