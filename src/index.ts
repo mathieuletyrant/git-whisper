@@ -24,6 +24,14 @@ program
   });
 
 program
+  .command('model')
+  .description('See the current model')
+  .action(() => {
+    const config = Config.getConfig();
+    console.log('Current model:', config.model);
+  });
+
+program
   .command('generate')
   .description('Generate a commit message based on staged changes')
   .option('-m, --model <model>', 'Override the default model')
