@@ -14,7 +14,8 @@ export const generateCommitMessage = async (config: { apiKey: string; model: str
 
     gitProvider.commit(commitMessage);
 
-    console.log('✅ Commit message generated and committed successfully.', commitMessage);
+    console.log('✅ Commit message generated and committed successfully.');
+    console.log('📝', commitMessage);
   } catch (error) {
     if (error instanceof EmptyStagedError) {
       console.log('🚨 No staged changes found.');
