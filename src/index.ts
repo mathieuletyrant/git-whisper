@@ -3,7 +3,7 @@ import { Command } from 'commander';
 
 import { CLIOptions } from './types/cli.js';
 
-const { generateCommitMessage } = await import('./commands/generate.js');
+import { generateCommitMessage } from './commands/generate.js';
 
 const program = new Command();
 

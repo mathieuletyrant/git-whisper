@@ -1,0 +1,23 @@
+# Dependencies
+node_modules/
+
+# TypeScript build output
+src/
+*.ts
+*.tsbuildinfo
+
+# Configuration files
+tsconfig.json
+.prettierrc
+.prettierignore
+eslint.config.js
+.gitignore
+
+# Documentation
+README.md
+
+# Test and development files
+tests/
+__tests__/
+*.test.ts
+*.spec.ts

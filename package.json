@@ -1,6 +1,6 @@
 {
   "name": "git-whisper",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A CLI tool for GitHub operations",
   "keywords": [
     "github",
@@ -22,7 +22,9 @@
     "lint": "eslint",
     "lint:fix": "eslint --fix",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "clean:dist": "rm -rf dist",
+    "prepublishOnly": "npm run clean:dist && npm run build"
   },
   "dependencies": {
     "axios": "1.7.7",
