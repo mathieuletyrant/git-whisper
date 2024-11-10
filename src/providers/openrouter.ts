@@ -17,6 +17,13 @@ export class NotFollowStandardError extends Error {
   }
 }
 
+export class UnknownError extends Error {
+  constructor(public readonly cause: Error) {
+    super();
+    this.name = 'UnknownError';
+  }
+}
+
 export class OpenRouterProvider {
   private MAX_RETRIES = 3;
 
@@ -52,7 +59,7 @@ export class OpenRouterProvider {
         return this.getCommitMessage(staged, count + 1);
       }
 
-      throw error;
+      throw new UnknownError(error as any);
     }
   }
 

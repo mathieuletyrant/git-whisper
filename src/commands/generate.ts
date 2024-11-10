@@ -1,4 +1,4 @@
-import { GitProvider, OpenRouterProvider } from '../providers/index.js';
+import { GitProvider, OpenRouterProvider, EmptyStagedError, CommitMessageTooLongError, UnknownError, NotFollowStandardError } from '../providers/index.js';
 
 /**
  * Command to generate a commit message based on staged changes.
@@ -14,9 +14,24 @@ export const generateCommitMessage = async (config: { apiKey: string; model: str
 
     gitProvider.commit(commitMessage);
 
-    console.log('Commit message generated and committed successfully.', commitMessage);
+    console.log('✅ Commit message generated and committed successfully.', commitMessage);
   } catch (error) {
-    console.log(error);
+    if (error instanceof EmptyStagedError) {
+      console.log('🚨 No staged changes found.');
+    }
+
+    if (error instanceof CommitMessageTooLongError) {
+      console.log('🚨 The generated commit message is too long:', error.commitMessage);
+    }
+
+    if (error instanceof NotFollowStandardError) {
+      console.log('🚨 The generated commit message does not follow the standard format:', error.commitMessage);
+    }
+
+    if (error instanceof UnknownError) {
+      console.log('🚨 An unknown error occurred:', error.cause.message);
+    }
+
     process.exit(1);
   }
 };
