@@ -30,7 +30,13 @@ echo 'export GIT_WHISPER_OPENROUTER_API_KEY="your-api-key-here"' >> ~/.zprofile
 source ~/.zprofile
 ```
 
-3. You can now use the `git-whisper` or `gw` command in your terminal.
+```bash
+# Generate commit message
+gw generate
+
+# Generate commit message with another LLM
+gw --model anthropic/claude-3.5-sonnet generate
+```
 
 ## 🧪 Testing Locally
 
