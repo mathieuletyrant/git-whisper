@@ -10,7 +10,7 @@ const program = new Command();
 const options = program.opts<CLIOptions>();
 
 program
-  .version('1.0.0')
+  .version('1.0.5')
   .description(
     'Git Whisper is an intelligent CLI tool that generates meaningful and consistent commit messages using AI. Stop struggling with commit message writing and let AI help you create clear, concise, and conventional commits.',
   )
@@ -23,10 +23,5 @@ program
   .action(() => {
     return generateCommitMessage(options);
   });
-
-// Set the default command to 'generate'
-program.action(() => {
-  return generateCommitMessage(options);
-});
 
 program.parse(process.argv);
