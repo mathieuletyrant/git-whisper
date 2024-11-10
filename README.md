@@ -26,7 +26,7 @@ npm install git-whisper -g
 
 ```bash
 # Open ~/.zprofile in your preferred editor
-echo 'export OPENROUTER_API_KEY="your-api-key-here"' >> ~/.zprofile
+echo 'export GIT_WHISPER_OPENROUTER_API_KEY="your-api-key-here"' >> ~/.zprofile
 source ~/.zprofile
 ```
 
@@ -34,7 +34,7 @@ source ~/.zprofile
 
 ```bash
 # Add the alias to your global git config
-git config --global alias.whisper 'git-whisper generate'
+git config --global alias.whisper '!git-whisper generate'
 ```
 
 ## 🧪 Testing Locally

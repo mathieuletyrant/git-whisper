@@ -12,7 +12,7 @@ program
   .description(
     'Git Whisper is an intelligent CLI tool that generates meaningful and consistent commit messages using AI. Stop struggling with commit message writing and let AI help you create clear, concise, and conventional commits.',
   )
-  .requiredOption('--apiKey, <apiKey>', 'Specify the API key for OpenRouter', process.env.OPENROUTER_API_KEY)
+  .option('--apiKey, <apiKey>', 'Specify the API key for OpenRouter', process.env.GIT_WHISPER_OPENROUTER_API_KEY)
   .option('--model <model>', 'Specify the model to use', 'anthropic/claude-3-5-haiku');
 
 program
