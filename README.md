@@ -40,7 +40,7 @@ source ~/.zprofile
 gw generate
 
 # Generate commit message with another LLM
-gw --model anthropic/claude-3.5-sonnet generate
+gw --model anthropic/claude-3.5-sonnet generat
 ```
 
 ## 🧪 Testing Locally
