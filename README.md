@@ -12,35 +12,28 @@ Git Whisper is an intelligent CLI tool that generates meaningful and consistent 
 
 ## 🎯 Purpose
 
-Git Whisper aims to streamline the git workflow by eliminating the cognitive load of writing commit messages. It helps developers maintain consistent and professional commit history while saving time.
+Git Whisper aims to streamline the Git workflow by eliminating the cognitive load of writing commit messages. It helps developers maintain a consistent and professional commit history while saving time.
 
-## 📝 TODO
+## 🚀 Setting Up Git-Whisper
 
-- Implement `gw config --api-key=<your-key>` command to easily set the OpenRouter API key without manually editing .zprofile
-- _More items to be added as needed_
-
-## 🚀 Setting up git-whisper
-
-1. Install git-whisper globally using npm:
+1. Install Git-Whisper globally using npm:
 
 ```bash
 npm install git-whisper -g
 ```
 
-2. Add the OpenRouter API key to your zprofile:
+2. Configure Git-Whisper:
 
 ```bash
-# Open ~/.zprofile in your preferred editor
-echo 'export GIT_WHISPER_OPENROUTER_API_KEY="your-api-key-here"' >> ~/.zprofile
-source ~/.zprofile
+gw config --apiKey your-api-key-here --model anthropic/claude-3-5-haiku
 ```
 
 ```bash
 # Generate commit message
-gw generate
+gw
 
 # Generate commit message with another LLM
-gw --model anthropic/claude-3.5-sonnet generat
+gw --model anthropic/claude-3.5-sonnet
 ```
 
 ## 🧪 Testing Locally
@@ -63,5 +56,5 @@ To test Git Whisper locally, follow these steps:
 
 ## 🛠️ Tech Stack
 
-- NodeJS
+- Node.js
 - OpenRouter
