@@ -19,14 +19,16 @@ Git Whisper aims to streamline the git workflow by eliminating the cognitive loa
 To test Git Whisper locally, follow these steps:
 
 1. Build the project:
-    ```sh
-    npm run build
-    ```
+
+   ```sh
+   npm run build
+   ```
 
 2. Link the package globally:
-    ```sh
-    npm link
-    ```
+
+   ```sh
+   npm link
+   ```
 
 3. You can now use the `git-whisper` command in your terminal.
 
