@@ -14,6 +14,11 @@ Git Whisper is an intelligent CLI tool that generates meaningful and consistent 
 
 Git Whisper aims to streamline the git workflow by eliminating the cognitive load of writing commit messages. It helps developers maintain consistent and professional commit history while saving time.
 
+## 📝 TODO
+
+- Implement `gw config --api-key=<your-key>` command to easily set the OpenRouter API key without manually editing .zprofile
+- _More items to be added as needed_
+
 ## 🚀 Setting up git-whisper
 
 1. Install git-whisper globally using npm:
