@@ -26,7 +26,6 @@ export class GitProvider {
   public commit(message: string): void {
     const command = `git commit -m "${message}"`;
 
-    console.log('Committing changes with message:', message);
     execSync(command);
     return;
   }

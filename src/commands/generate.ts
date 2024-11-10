@@ -11,11 +11,11 @@ export const generateCommitMessage = async (cliOptions: CLIOptions) => {
   try {
     const staged = gitProvider.getStagedChanges();
 
-    const result = await openRouterProvider.getCommitMessage(staged);
+    const commitMessage = await openRouterProvider.getCommitMessage(staged);
 
-    gitProvider.commit(result);
+    gitProvider.commit(commitMessage);
 
-    console.log('Commit message generated and committed successfully!');
+    console.log('Commit message generated and committed successfully.', commitMessage);
   } catch (error) {
     console.log(error);
     process.exit(1);
