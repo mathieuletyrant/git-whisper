@@ -1,13 +1,9 @@
 #!/usr/bin/env node
 
-import { Command } from 'commander';
+import { gitProvider, openRouterProvider } from './providers/index.js';
 
-// import { envCommand } from './commands/env.js';
+const staged = gitProvider.getStaged();
 
-const program = new Command();
+const result = await openRouterProvider.getCommitMessage(staged);
 
-program.version('1.0.0').description('A CLI tool to generate a commit based on stash changes');
-
-// program.addCommand(envCommand);
-
-program.parse(process.argv);
+console.log(JSON.stringify(result, null, 2));
