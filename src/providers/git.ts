@@ -23,13 +23,8 @@ export class GitProvider {
   /**
    * Create a git commit with the given message
    */
-  public commit(message: string, dryRun = false): void {
+  public commit(message: string): void {
     const command = `git commit -m "${message}"`;
-
-    if (dryRun) {
-      console.log(command);
-      return;
-    }
 
     execSync(command);
     return;
