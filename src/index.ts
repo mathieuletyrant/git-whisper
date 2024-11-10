@@ -12,19 +12,7 @@ program
   .version('1.0.7')
   .description(
     'Git Whisper is an intelligent CLI tool that generates meaningful and consistent commit messages using AI. Stop struggling with commit message writing and let AI help you create clear, concise, and conventional commits.',
-  );
-
-program
-  .command('config')
-  .description('Configure Git Whisper')
-  .requiredOption('-k, --apiKey <apiKey>', 'Specify the OpenRouter API key')
-  .requiredOption('-m, --model <model>', 'Specify the model to use')
-  .action((options) => {
-    Config.updateConfig(options);
-  });
-
-program
-  .command('generate')
+  )
   .description('Generate a commit message based on staged changes')
   .option('-m, --model <model>', 'Override the default model')
   .action(() => {
@@ -42,6 +30,15 @@ program
     }
 
     return generateCommitMessage({ ...config, ...options });
+  });
+
+program
+  .command('config')
+  .description('Configure Git Whisper')
+  .requiredOption('-k, --apiKey <apiKey>', 'Specify the OpenRouter API key')
+  .requiredOption('-m, --model <model>', 'Specify the model to use')
+  .action((options) => {
+    Config.updateConfig(options);
   });
 
 program.parse(process.argv);
