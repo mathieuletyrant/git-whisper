@@ -1,6 +1,6 @@
 {
   "name": "git-whisper",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A CLI tool for GitHub operations",
   "keywords": [
     "github",
@@ -12,7 +12,8 @@
   "type": "module",
   "license": "MIT",
   "bin": {
-    "git-whisper": "dist/index.js"
+    "git-whisper": "dist/index.js",
+    "gw": "dist/index.js"
   },
   "scripts": {
     "build": "tsc",

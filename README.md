@@ -30,13 +30,6 @@ echo 'export GIT_WHISPER_OPENROUTER_API_KEY="your-api-key-here"' >> ~/.zprofile
 source ~/.zprofile
 ```
 
-3. Add the git whisper alias to your git config:
-
-```bash
-# Add the alias to your global git config
-git config --global alias.whisper '!git-whisper generate'
-```
-
 ## 🧪 Testing Locally
 
 To test Git Whisper locally, follow these steps:
