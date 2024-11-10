@@ -22,7 +22,7 @@ Git Whisper aims to streamline the Git workflow by eliminating the cognitive loa
 npm install git-whisper -g
 ```
 
-2. Configure Git-Whisper:
+2. Configure Git-Whisper [OpenRouter](https://openrouter.ai):
 
 ```bash
 gw config --apiKey your-api-key-here --model anthropic/claude-3-5-haiku
