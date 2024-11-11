@@ -39,6 +39,10 @@ gw
 
 # Generate commit message with another LLM
 gw --model anthropic/claude-3.5-sonnet
+
+# See the default configuration
+gw config view apiKey
+gw config view model
 ```
 
 ## 🧪 Testing Locally
