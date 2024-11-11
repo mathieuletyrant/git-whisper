@@ -30,9 +30,6 @@ gw config set apiKey
 
 # This will prompt you with a list of available LLMs
 gw config set model
-
-# This will prompt you a list of commit messages to choose
-gw config set interactive
 ```
 
 This command will create a configuration file at `~/.git-whisper/config.json` to store your API key and preferred model settings.
@@ -49,10 +46,12 @@ gw --model anthropic/claude-3.5-sonnet
 # Generate a commit without executing the git commit
 gw --dry-run
 
+# Generate 5 commit messages and prompt me the commits
+gw -i -n 5
+
 # See the default configuration
 gw config view apiKey
 gw config view model
-gw config view interactive
 ```
 
 ## 🧪 Testing Locally
