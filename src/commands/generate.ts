@@ -53,12 +53,14 @@ export const registerGenerateCommand = (program: Command) => {
     const options = program.opts<{ model?: string }>();
 
     if (!config.apiKey) {
-      console.error('Please configure Git Whisper with an API key.');
+      console.log('Please configure an API key.');
+      console.log('➡️ gw config set apiKey <apiKey');
       return;
     }
 
     if (!options.model && !config.model) {
-      console.error('Please specify a model or configure a default model.');
+      console.log('Please specify a model or configure a default model.');
+      console.log('➡️ gw config set model <model>');
       return;
     }
 
