@@ -13,7 +13,7 @@ import { Config } from '../config.js';
 /**
  * Command to generate a commit message based on staged changes.
  */
-const generateCommitMessage = async (config: { apiKey: string; model: string }) => {
+const generateCommitMessage = async (config: { apiKey: string; model: string; dryRun: boolean }) => {
   const openRouterProvider = new OpenRouterProvider(config);
   const gitProvider = new GitProvider();
 
@@ -22,9 +22,13 @@ const generateCommitMessage = async (config: { apiKey: string; model: string }) 
 
     const commitMessage = await openRouterProvider.getCommitMessage(staged);
 
-    gitProvider.commit(commitMessage);
+    if (config.dryRun) {
+      console.log('✅ Commit message generated successfully.');
+    } else {
+      gitProvider.commit(commitMessage);
+      console.log('✅ Commit message generated and committed successfully.');
+    }
 
-    console.log('✅ Commit message generated and committed successfully.');
     console.log('📝', commitMessage);
   } catch (error) {
     if (error instanceof EmptyStagedError) {
@@ -51,9 +55,12 @@ export const registerGenerateCommand = (program: Command) => {
   program
     .description('Generate a commit message based on staged changes')
     .option('-m, --model <model>', 'Override the default model')
+    .option('--dry-run', 'Generate the commit message without committing', false)
     .action(() => {
       const config = Config.getConfig();
-      const options = program.opts<{ model?: string }>();
+      const options = program.opts<{ model?: string; dryRun: boolean }>();
+
+      console.log('🤖 Generating a commit message...');
 
       if (!config.apiKey) {
         console.log('Please configure an API key.');

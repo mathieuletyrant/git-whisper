@@ -34,11 +34,14 @@ This command will create a configuration file at `~/.git-whisper/config.json` to
 3. Use the CLI ❤️
 
 ```bash
-# Generate commit message
+# Generate commit message and execute the git commit
 gw
 
 # Generate commit message with another LLM
 gw --model anthropic/claude-3.5-sonnet
+
+# Generate a commit without executing the git commit
+gw --dry-run
 
 # See the default configuration
 gw config view apiKey
