@@ -25,7 +25,8 @@ npm install git-whisper -g
 2. Configure Git-Whisper [OpenRouter](https://openrouter.ai):
 
 ```bash
-gw config --apiKey your-api-key-here --model anthropic/claude-3-5-haiku
+gw config set apiKey <your-api-key-here>
+gw config set model anthropic/claude-3-5-haiku
 ```
 
 This command will create a configuration file at `~/.git-whisper/config.json` to store your API key and preferred model settings.
@@ -34,10 +35,10 @@ This command will create a configuration file at `~/.git-whisper/config.json` to
 
 ```bash
 # Generate commit message
-gw generate
+gw
 
 # Generate commit message with another LLM
-gw --model anthropic/claude-3.5-sonnet generate
+gw --model anthropic/claude-3.5-sonnet
 ```
 
 ## 🧪 Testing Locally

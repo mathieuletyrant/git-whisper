@@ -11,9 +11,9 @@ const viewConfig = (key: keyof ConfigData) => {
   const value = config[key];
 
   if (value) {
-    console.log(`${key}:`, value);
+    console.log(`📝 ${key}:`, value);
   } else {
-    console.log(`${key}: Not configured`);
+    console.log(`🚨 ${key}: Not configured`);
   }
 };
 
