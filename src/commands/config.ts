@@ -64,25 +64,6 @@ export const registerConfigCommands = (program: Command) => {
       }
     });
 
-  setCmd
-    .command('interactive ')
-    .description('Set interactive mode')
-    .action(async () => {
-      const prompt = new AutoComplete({
-        message: 'Select:',
-        limit: 10,
-        initial: 0,
-        choices: ['true', 'false'],
-      });
-
-      try {
-        const answer = await prompt.run();
-        setConfig('interactive', answer === 'true');
-      } catch (error) {
-        console.log('🚨 An error occurred during model selection.');
-      }
-    });
-
   // View commands
   const viewCmd = configCommand.command('view').description('View configuration values');
   viewCmd
@@ -94,9 +75,4 @@ export const registerConfigCommands = (program: Command) => {
     .command('model')
     .description('View the configured model')
     .action(() => viewConfig('model'));
-
-  viewCmd
-    .command('interactive')
-    .description('View the configured interactive mode')
-    .action(() => viewConfig('interactive'));
 };

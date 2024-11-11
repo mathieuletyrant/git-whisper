@@ -2,7 +2,7 @@ import { homedir } from 'os';
 import { join } from 'path';
 import { writeFileSync, readFileSync, existsSync, mkdirSync } from 'fs';
 
-interface ConfigData {
+export interface ConfigData {
   model: string;
   apiKey: string;
 }
