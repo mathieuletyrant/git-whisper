@@ -1,5 +1,10 @@
 import { Command } from 'commander';
+import pkg from 'enquirer';
 import { Config, ConfigData } from '../config.js';
+import { OpenRouterProvider } from '../providers/openrouter.js';
+
+// @ts-expect-error
+const { AutoComplete } = pkg;
 
 const setConfig = (key: keyof ConfigData, value: string) => {
   Config.updateConfig({ [key]: value });
@@ -27,9 +32,27 @@ export const registerConfigCommands = (program: Command) => {
     .description('Set the OpenRouter API key')
     .action((value) => setConfig('apiKey', value));
   setCmd
-    .command('model <value>')
-    .description('Set the default model')
-    .action((value) => setConfig('model', value));
+    .command('model')
+    .description('Set the default model, it will prompt you to select a model')
+    .action(async () => {
+      const openRouterProvider = new OpenRouterProvider(Config.getConfig());
+
+      const availableModels = await openRouterProvider.getAvailableModels();
+
+      const prompt = new AutoComplete({
+        message: 'Select a model:',
+        limit: 10,
+        initial: 0,
+        choices: Object.keys(availableModels),
+      });
+
+      try {
+        const answer = await prompt.run();
+        setConfig('model', availableModels[answer]);
+      } catch (error) {
+        console.log('🚨 An error occurred during model selection.');
+      }
+    });
 
   // View commands
   const viewCmd = configCommand.command('view').description('View configuration values');

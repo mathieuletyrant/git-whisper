@@ -5,10 +5,10 @@ Git Whisper is an intelligent CLI tool that generates meaningful and consistent 
 ## ✨ Features
 
 - 🤖 AI-powered commit message generation
+- 💡 Choose your preferred LLM (GPT-4, Claude, and more)
 - 📝 Follows conventional commit standards
 - 🚀 Simple and intuitive CLI interface
 - 🔄 Analyzes your code changes to provide context-aware messages
-- 💡 Supports multiple languages and frameworks
 
 ## 🎯 Purpose
 
@@ -26,7 +26,9 @@ npm install git-whisper -g
 
 ```bash
 gw config set apiKey <your-api-key-here>
-gw config set model anthropic/claude-3-5-haiku
+
+# This will prompt you with a list of available LLMs
+gw config set model
 ```
 
 This command will create a configuration file at `~/.git-whisper/config.json` to store your API key and preferred model settings.

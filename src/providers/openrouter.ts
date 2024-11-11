@@ -63,6 +63,15 @@ export class OpenRouterProvider {
     }
   }
 
+  public async getAvailableModels(): Promise<{ [name: string]: string }> {
+    const { data } = await this.openRouterClient.get<{ data: { id: string; name: string }[] }>('/models');
+
+    return data.data.reduce<{ [name: string]: string }>((acc, model) => {
+      acc[model.name] = model.id;
+      return acc;
+    }, {});
+  }
+
   private async privateGetCommitMessage(staged: string): Promise<string> {
     const { data } = await this.openRouterClient.post('/chat/completions', {
       model: this.params.model,
