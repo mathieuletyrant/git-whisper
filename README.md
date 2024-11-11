@@ -25,10 +25,14 @@ npm install git-whisper -g
 2. Configure Git-Whisper [OpenRouter](https://openrouter.ai):
 
 ```bash
-gw config set apiKey <your-api-key-here>
+# This will prompt you an input to put your apiKey
+gw config set apiKey
 
 # This will prompt you with a list of available LLMs
 gw config set model
+
+# This will prompt you a list of commit messages to choose
+gw config set interactive
 ```
 
 This command will create a configuration file at `~/.git-whisper/config.json` to store your API key and preferred model settings.
@@ -48,6 +52,7 @@ gw --dry-run
 # See the default configuration
 gw config view apiKey
 gw config view model
+gw config view interactive
 ```
 
 ## 🧪 Testing Locally

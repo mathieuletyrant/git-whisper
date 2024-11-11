@@ -4,9 +4,9 @@ import { Config, ConfigData } from '../config.js';
 import { OpenRouterProvider } from '../providers/openrouter.js';
 
 // @ts-expect-error
-const { AutoComplete } = pkg;
+const { AutoComplete, prompt } = pkg;
 
-const setConfig = (key: keyof ConfigData, value: string) => {
+const setConfig = (key: keyof ConfigData, value: string | boolean) => {
   Config.updateConfig({ [key]: value });
   console.log(`✅ ${key} has been updated successfully.`);
 };
@@ -15,7 +15,7 @@ const viewConfig = (key: keyof ConfigData) => {
   const config = Config.getConfig();
   const value = config[key];
 
-  if (value) {
+  if (typeof value !== 'undefined') {
     console.log(`📝 ${key}:`, value);
   } else {
     console.log(`🚨 ${key}: Not configured`);
@@ -28,9 +28,19 @@ export const registerConfigCommands = (program: Command) => {
   // Set commands
   const setCmd = configCommand.command('set').description('Set configuration values');
   setCmd
-    .command('apiKey <value>')
+    .command('apiKey')
     .description('Set the OpenRouter API key')
-    .action((value) => setConfig('apiKey', value));
+    .action(async () => {
+      const response = await prompt({
+        type: 'input',
+        name: 'apiKey',
+        message: 'Enter the OpenRouter API key:',
+      });
+
+      // @ts-expect-error
+      setConfig('apiKey', response.apiKey);
+    });
+
   setCmd
     .command('model')
     .description('Set the default model, it will prompt you to select a model')
@@ -54,14 +64,39 @@ export const registerConfigCommands = (program: Command) => {
       }
     });
 
+  setCmd
+    .command('interactive ')
+    .description('Set interactive mode')
+    .action(async () => {
+      const prompt = new AutoComplete({
+        message: 'Select:',
+        limit: 10,
+        initial: 0,
+        choices: ['true', 'false'],
+      });
+
+      try {
+        const answer = await prompt.run();
+        setConfig('interactive', answer === 'true');
+      } catch (error) {
+        console.log('🚨 An error occurred during model selection.');
+      }
+    });
+
   // View commands
   const viewCmd = configCommand.command('view').description('View configuration values');
   viewCmd
     .command('apiKey')
     .description('View the configured API key')
     .action(() => viewConfig('apiKey'));
+
   viewCmd
     .command('model')
     .description('View the configured model')
     .action(() => viewConfig('model'));
+
+  viewCmd
+    .command('interactive')
+    .description('View the configured interactive mode')
+    .action(() => viewConfig('interactive'));
 };

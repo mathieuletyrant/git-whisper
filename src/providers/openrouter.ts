@@ -1,15 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
 
-export class CommitMessageTooLongError extends Error {
-  public readonly commitMessageLength: number;
-
-  constructor(public readonly commitMessage: string) {
-    super();
-    this.name = 'CommitMessageTooLongError';
-    this.commitMessageLength = commitMessage.length;
-  }
-}
-
 export class NotFollowStandardError extends Error {
   constructor(public readonly commitMessage: string) {
     super();
@@ -23,6 +13,19 @@ export class UnknownError extends Error {
     this.name = 'UnknownError';
   }
 }
+
+export class ParsingError extends Error {
+  constructor(
+    public name: string,
+    public readonly cause?: Error,
+  ) {
+    super();
+  }
+}
+
+type GenerationOptions = {
+  numberOfCommitMessages: number;
+};
 
 export class OpenRouterProvider {
   private MAX_RETRIES = 3;
@@ -55,24 +58,25 @@ export class OpenRouterProvider {
    *
    * Possible errors:
    * Throw a CommitMessageTooLongError if the commit message is longer than 50 characters.
-   * Throw a NotFollowStandardError if the commit message does not follow the standard format.
+   * Throw a ParsingError if the response is not a valid JSON.
    */
-  public async getCommitMessage(staged: string, count: number = 0): Promise<string> {
+  public async getCommitMessages(staged: string, options: GenerationOptions, count: number = 0): Promise<string[]> {
     try {
-      return await this.privateGetCommitMessage(staged);
+      return await this.privateGetCommitMessage(staged, options);
     } catch (error) {
-      if (error instanceof CommitMessageTooLongError && count <= this.MAX_RETRIES) {
-        return this.getCommitMessage(staged, count + 1);
-      }
       if (error instanceof NotFollowStandardError && count <= this.MAX_RETRIES) {
-        return this.getCommitMessage(staged, count + 1);
+        return this.getCommitMessages(staged, options, count + 1);
+      }
+
+      if (error instanceof ParsingError && count <= this.MAX_RETRIES) {
+        return this.getCommitMessages(staged, options, count + 1);
       }
 
       throw new UnknownError(error as any);
     }
   }
 
-  private async privateGetCommitMessage(staged: string): Promise<string> {
+  private async privateGetCommitMessage(staged: string, options: GenerationOptions): Promise<string[]> {
     const { data } = await this.openRouterClient.post<{
       choices: { message: { content: string } }[];
     }>('/chat/completions', {
@@ -86,25 +90,34 @@ export class OpenRouterProvider {
             The message should be short and descriptive and strictly follow the format below:
             <type>(<scope>): <description>
 
-            Here is the list of types you can use:
-            - feat: new feature
-            - fix: bug fix
-            - docs: documentation
-            - style: formatting
-            - refactor: refactoring
-            - test: adding tests
-            - chore: maintenance
+            Rules for commit message generation:
+            1. Generate exactly ${options.numberOfCommitMessages} commit message options
+            2. Use only these commit type:
+              - feat: for new features
+              - fix: for bug fixes
+              - docs: for documentation changes
+              - style: for formatting changes
+              - refactor: for code restructuring
+              - test: for adding tests
+              - chore: for maintenance tasks
+            3. Keep messages concise and descriptive
+            4. Maximum length: 50 characters including prefix
+            5. Answer me only with the commit messages in JSON format
+            6. Example format: ["feat(auth): add user authentication", "fix(auth): resolve login bug", "docs(readme): update API docs"]
 
-            Example that works:
-            - feat(auth): add login form
-            - fix(api): fix timeout error
-            - docs(readme): update install
-
-            Rules for you to follow: 
-            - Returns me 3 options to choose from.
-            - Each option must be a commit message.
-            - Each option must only these prefixes and keep the message short and descriptive.
-            - Each option must not be longer than 50 characters.
+            Here's a guide to writing effective commit messages:
+            - feat(auth): implement user authentication form
+            - feat(auth): add OAuth2.0 integration
+            - fix(api): resolve API request timeout
+            - fix(core): handle null pointer exception
+            - docs(readme): update installation steps
+            - docs(api): add endpoint documentation
+            - chore(deps): update dependencies
+            - style(ui): improve button alignment
+            - perf(query): optimize database queries
+            - test(auth): add login unit tests
+            - refactor(utils): simplify helper functions
+            - ci(workflow): update GitHub Actions
 
             Here is the staged changes:
             ${staged}
@@ -113,18 +126,26 @@ export class OpenRouterProvider {
       ],
     });
 
-    const commitMessage = data.choices[0].message.content;
+    try {
+      const commitMessages = JSON.parse(data.choices[0].message.content);
 
-    console.log(commitMessage);
+      if (!Array.isArray(commitMessages)) {
+        throw new ParsingError('NotArrayError');
+      }
 
-    if (commitMessage.length > 50) {
-      throw new CommitMessageTooLongError(commitMessage);
+      if (commitMessages.length !== options.numberOfCommitMessages) {
+        throw new ParsingError('NotExpectedLengthError');
+      }
+
+      commitMessages.forEach((commitMessage: string) => {
+        if (!/^(feat|fix|docs|style|refactor|test|chore)\(.+\): .+$/.test(commitMessage)) {
+          throw new NotFollowStandardError(commitMessage);
+        }
+      });
+
+      return commitMessages;
+    } catch (error) {
+      throw new ParsingError('NotValidJSONError', error as Error);
     }
-
-    if (['feat', 'fix', 'docs', 'style', 'refactor', 'test', 'chore'].every((type) => !commitMessage.startsWith(type))) {
-      throw new NotFollowStandardError(commitMessage);
-    }
-
-    return commitMessage;
   }
 }
