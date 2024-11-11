@@ -81,7 +81,7 @@ export const registerGenerateCommand = (program: Command) => {
       const config = Config.getConfig();
       const options = program.opts<{ model?: string; dryRun: boolean; interactive: boolean; numberOfCommitMessages: number }>();
 
-      console.log('🤖 Generating a commit message...');
+      console.log('🤖 Generating...');
 
       if (!config.apiKey) {
         console.log('Please configure an API key.');
