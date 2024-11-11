@@ -1,9 +1,19 @@
-import { GitProvider, OpenRouterProvider, EmptyStagedError, CommitMessageTooLongError, UnknownError, NotFollowStandardError } from '../providers/index.js';
+import { Command } from 'commander';
+
+import {
+  GitProvider,
+  OpenRouterProvider,
+  EmptyStagedError,
+  CommitMessageTooLongError,
+  UnknownError,
+  NotFollowStandardError,
+} from '../providers/index.js';
+import { Config } from '../config.js';
 
 /**
  * Command to generate a commit message based on staged changes.
  */
-export const generateCommitMessage = async (config: { apiKey: string; model: string }) => {
+const generateCommitMessage = async (config: { apiKey: string; model: string }) => {
   const openRouterProvider = new OpenRouterProvider(config);
   const gitProvider = new GitProvider();
 
@@ -35,4 +45,23 @@ export const generateCommitMessage = async (config: { apiKey: string; model: str
 
     process.exit(1);
   }
+};
+
+export const registerGenerateCommand = (program: Command) => {
+  program.option('-m, --model <model>', 'Override the default model').action(() => {
+    const config = Config.getConfig();
+    const options = program.opts<{ model?: string }>();
+
+    if (!config.apiKey) {
+      console.error('Please configure Git Whisper with an API key.');
+      return;
+    }
+
+    if (!options.model && !config.model) {
+      console.error('Please specify a model or configure a default model.');
+      return;
+    }
+
+    return generateCommitMessage({ ...config, ...options });
+  });
 };

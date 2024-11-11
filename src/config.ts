@@ -2,10 +2,10 @@ import { homedir } from 'os';
 import { join } from 'path';
 import { writeFileSync, readFileSync, existsSync, mkdirSync } from 'fs';
 
-interface ConfigData {
+export type ConfigData = {
   model: string;
   apiKey: string;
-}
+};
 
 export class Config {
   private static readonly CONFIG_DIR = join(homedir(), '.git-whisper');
