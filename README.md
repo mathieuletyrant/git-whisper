@@ -43,11 +43,9 @@ gw
 # Generate commit message with another LLM
 gw --model anthropic/claude-3.5-sonnet
 
-# Generate a commit without executing the git commit
-gw --dry-run
 
-# Generate 5 commit messages and prompt me the commits
-gw -i -n 5
+# Generate 5 commit messages interactively without actually committing them (dry run).
+gw --interactive --commitCount 5 --dry-run
 
 # See the default configuration
 gw config view apiKey

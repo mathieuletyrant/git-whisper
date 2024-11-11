@@ -7,48 +7,44 @@ import { Config } from '../config.js';
 // @ts-expect-error
 const { AutoComplete } = pkg;
 
+type OpenRouterConfig = {
+  apiKey: string;
+  model: string;
+};
+
+type GenerateConfig = {
+  dryRun: boolean;
+  interactive: boolean;
+  commitCount: number;
+};
+
 /**
  * Command to generate a commit message based on staged changes.
  */
-const generateCommitMessage = async (config: {
-  apiKey: string;
-  model: string;
-  dryRun: boolean;
-  interactive: boolean;
-  numberOfCommitMessages: number;
-}) => {
-  const openRouterProvider = new OpenRouterProvider(config);
+const generateCommitMessage = async (openRouterConfig: OpenRouterConfig, { commitCount, dryRun, interactive }: GenerateConfig) => {
+  const openRouterProvider = new OpenRouterProvider(openRouterConfig);
   const gitProvider = new GitProvider();
 
   try {
     const staged = gitProvider.getStagedChanges();
 
-    const commitMessages = await openRouterProvider.getCommitMessages(staged, {
-      numberOfCommitMessages: config.numberOfCommitMessages,
-    });
-    let commitMessage = commitMessages[0];
+    console.log('🤖 Generating...');
 
-    if (config.dryRun) {
-      console.log('✅ Commit message generated successfully.');
-      for (const commitMessage of commitMessages) {
-        console.log('📝', commitMessage);
-      }
+    const commitMessages = await openRouterProvider.getCommitMessages(staged, {
+      commitCount,
+    });
+
+    // If interactive mode is enabled, prompt the user to select a commit message
+    const selectedMessage = interactive ? await promptUserToSelectCommitMessage(commitMessages) : commitMessages[0];
+    console.log(`📝 Selected commit message: ${selectedMessage}`);
+
+    if (dryRun) {
+      console.log('🚫 Dry run enabled. Skipping commit.');
       return;
     }
 
-    if (config.interactive) {
-      const prompt = new AutoComplete({
-        message: 'Select a commit message:',
-        limit: 10,
-        choices: commitMessages,
-      });
-
-      commitMessage = await prompt.run();
-    }
-
-    gitProvider.commit(commitMessage);
-    console.log('✅ Commit message committed successfully.');
-    console.log('📝', commitMessage);
+    gitProvider.commit(selectedMessage);
+    console.log('✅ Commit message generated successfully.');
   } catch (error) {
     if (error instanceof EmptyStagedError) {
       console.log('🚨 No staged changes found.');
@@ -70,18 +66,26 @@ const generateCommitMessage = async (config: {
   }
 };
 
+const promptUserToSelectCommitMessage = async (commitMessages: string[]): Promise<string> => {
+  const prompt = new AutoComplete({
+    message: 'Select a commit message:',
+    limit: 10,
+    choices: commitMessages,
+  });
+
+  return prompt.run();
+};
+
 export const registerGenerateCommand = (program: Command) => {
   program
     .description('Generate a commit message based on staged changes')
     .option('-m, --model <model>', 'Override the default model')
     .option('-d, --dry-run', 'Generate the commit message without committing', false)
     .option('-i, --interactive', 'Select a commit message interactively', false)
-    .option('-n, --numberOfCommitMessages <number>', 'Number of commit messages to generate', '3')
+    .option('-c, --commitCount <number>', 'Number of commit messages to generate', '3')
     .action(() => {
       const config = Config.getConfig();
-      const options = program.opts<{ model?: string; dryRun: boolean; interactive: boolean; numberOfCommitMessages: number }>();
-
-      console.log('🤖 Generating...');
+      const options = program.opts<{ model?: string; dryRun: boolean; interactive: boolean; commitCount: number }>();
 
       if (!config.apiKey) {
         console.log('Please configure an API key.');
@@ -95,6 +99,13 @@ export const registerGenerateCommand = (program: Command) => {
         return;
       }
 
-      return generateCommitMessage({ ...config, ...options });
+      return generateCommitMessage(
+        { apiKey: config.apiKey, model: options.model || config.model },
+        {
+          dryRun: options.dryRun,
+          interactive: options.interactive,
+          commitCount: Number(options.commitCount),
+        },
+      );
     });
 };

@@ -24,7 +24,7 @@ export class ParsingError extends Error {
 }
 
 type GenerationOptions = {
-  numberOfCommitMessages: number;
+  commitCount: number;
 };
 
 export class OpenRouterProvider {
@@ -92,7 +92,7 @@ export class OpenRouterProvider {
             <type>(<scope>): <description>
 
             Rules for commit message generation:
-            1. Generate at least 1 and up to ${options.numberOfCommitMessages} commit message options
+            1. Generate at least 1 and up to ${options.commitCount} commit message options
             2. Use only these commit type:
               - feat: for new features
               - fix: for bug fixes
