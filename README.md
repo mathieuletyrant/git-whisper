@@ -61,13 +61,11 @@ To set up Git Whisper for local testing:
    npm run build:watch
    ```
 
-2. Create global link:
+2. Run the CLI
 
    ```sh
    node ./dist/index.js
    ```
-
-3. Start using `git-whisper` or `gw` commands in your terminal.
 
 ## 🛠️ Built With
 
