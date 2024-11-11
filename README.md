@@ -46,6 +46,9 @@ gw --model anthropic/claude-3.5-sonnet
 # Generate 5 commit messages interactively (preview only)
 gw --interactive --commitCount 5 --dry-run
 
+# Generate commit in french
+gw --language french
+
 # View your current configuration
 gw config view apiKey
 gw config view model

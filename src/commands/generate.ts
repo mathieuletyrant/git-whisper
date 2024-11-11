@@ -16,12 +16,13 @@ type GenerateConfig = {
   dryRun: boolean;
   interactive: boolean;
   commitCount: number;
+  language: string;
 };
 
 /**
  * Command to generate a commit message based on staged changes.
  */
-const generateCommitMessage = async (openRouterConfig: OpenRouterConfig, { commitCount, dryRun, interactive }: GenerateConfig) => {
+const generateCommitMessage = async (openRouterConfig: OpenRouterConfig, { commitCount, dryRun, interactive, language }: GenerateConfig) => {
   const openRouterProvider = new OpenRouterProvider(openRouterConfig);
   const gitProvider = new GitProvider();
 
@@ -32,6 +33,7 @@ const generateCommitMessage = async (openRouterConfig: OpenRouterConfig, { commi
 
     const commitMessages = await openRouterProvider.getCommitMessages(staged, {
       commitCount,
+      language,
     });
 
     // If interactive mode is enabled, prompt the user to select a commit message
@@ -83,9 +85,10 @@ export const registerGenerateCommand = (program: Command) => {
     .option('-d, --dry-run', 'Generate the commit message without committing', false)
     .option('-i, --interactive', 'Select a commit message interactively', false)
     .option('-c, --commitCount <number>', 'Number of commit messages to generate', '3')
+    .option('-l, --language <language>', 'Language of the commit message', 'english')
     .action(() => {
       const config = Config.getConfig();
-      const options = program.opts<{ model?: string; dryRun: boolean; interactive: boolean; commitCount: number }>();
+      const options = program.opts<{ model?: string; dryRun: boolean; interactive: boolean; commitCount: number; language: string }>();
 
       if (!config.apiKey) {
         console.log('Please configure an API key.');
@@ -103,6 +106,7 @@ export const registerGenerateCommand = (program: Command) => {
         { apiKey: config.apiKey, model: options.model || config.model },
         {
           dryRun: options.dryRun,
+          language: options.language,
           interactive: options.interactive,
           commitCount: Number(options.commitCount),
         },

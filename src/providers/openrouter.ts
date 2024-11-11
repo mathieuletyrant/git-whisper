@@ -25,6 +25,7 @@ export class ParsingError extends Error {
 
 type GenerationOptions = {
   commitCount: number;
+  language: string;
 };
 
 export class OpenRouterProvider {
@@ -105,6 +106,7 @@ export class OpenRouterProvider {
             4. Maximum length: 50 characters including prefix
             5. Answer me only the commit messages in JSON Format, your answer should be a VALID JSON array of strings
             6. Example format: ["feat(auth): add user authentication", "fix(auth): resolve login bug", "docs(readme): update API docs"]
+            7. Language should be in ${options.language} only
 
             Here's a guide to writing effective commit messages:
             - feat(auth): implement user authentication form
