@@ -57,8 +57,9 @@ export class OpenRouterProvider {
    * This function returns the commit message based on the staged changes.
    *
    * Possible errors:
-   * Throw a CommitMessageTooLongError if the commit message is longer than 50 characters.
+   * Throw a NotFollowStandardError, if the commit message does not follow the standard format.
    * Throw a ParsingError if the response is not a valid JSON.
+   * Throw a UnknownError if an unknown error occurs.
    */
   public async getCommitMessages(staged: string, options: GenerationOptions, count: number = 0): Promise<string[]> {
     try {
@@ -91,7 +92,7 @@ export class OpenRouterProvider {
             <type>(<scope>): <description>
 
             Rules for commit message generation:
-            1. Generate exactly ${options.numberOfCommitMessages} commit message options
+            1. Generate at least 1 and up to ${options.numberOfCommitMessages} commit message options
             2. Use only these commit type:
               - feat: for new features
               - fix: for bug fixes
@@ -102,7 +103,7 @@ export class OpenRouterProvider {
               - chore: for maintenance tasks
             3. Keep messages concise and descriptive
             4. Maximum length: 50 characters including prefix
-            5. Answer me only with the commit messages in JSON format
+            5. Answer me only the commit messages in JSON Format, your answer should be a VALID JSON array of strings
             6. Example format: ["feat(auth): add user authentication", "fix(auth): resolve login bug", "docs(readme): update API docs"]
 
             Here's a guide to writing effective commit messages:
@@ -131,10 +132,6 @@ export class OpenRouterProvider {
 
       if (!Array.isArray(commitMessages)) {
         throw new ParsingError('NotArrayError');
-      }
-
-      if (commitMessages.length !== options.numberOfCommitMessages) {
-        throw new ParsingError('NotExpectedLengthError');
       }
 
       commitMessages.forEach((commitMessage: string) => {
