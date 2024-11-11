@@ -1,12 +1,13 @@
 import { Command } from 'commander';
 import pkg from 'enquirer';
+
 import { Config, ConfigData } from '../config.js';
 import { OpenRouterProvider } from '../providers/openrouter.js';
 
 // @ts-expect-error
 const { AutoComplete, prompt } = pkg;
 
-const setConfig = (key: keyof ConfigData, value: string | boolean) => {
+const setConfig = (key: keyof ConfigData, value: string) => {
   Config.updateConfig({ [key]: value });
   console.log(`✅ ${key} has been updated successfully.`);
 };
