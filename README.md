@@ -65,7 +65,7 @@ To test Git Whisper locally, follow these steps:
 2. Link the package globally:
 
    ```sh
-   npm link
+   node ./dist/index.js
    ```
 
 3. You can now use the `git-whisper` or `gw` command in your terminal.
