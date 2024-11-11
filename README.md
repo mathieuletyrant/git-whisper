@@ -80,7 +80,6 @@ To set up Git Whisper for local testing:
 Here are some exciting features we're planning to add:
 
 - 🎨 Custom commit message templates
-- 🌐 Multi-language commit message support
 - 🔄 Git hook integration for automated commits
 - 📊 Commit history analysis and suggestions
 - ⚡ Batch commit processing for multiple changes
