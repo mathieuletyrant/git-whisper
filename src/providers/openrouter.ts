@@ -41,6 +41,15 @@ export class OpenRouterProvider {
     });
   }
 
+  public async getAvailableModels(): Promise<{ [name: string]: string }> {
+    const { data } = await this.openRouterClient.get<{ data: { id: string; name: string }[] }>('/models');
+
+    return data.data.reduce<{ [name: string]: string }>((acc, model) => {
+      acc[model.name] = model.id;
+      return acc;
+    }, {});
+  }
+
   /**
    * This function returns the commit message based on the staged changes.
    *
@@ -63,17 +72,10 @@ export class OpenRouterProvider {
     }
   }
 
-  public async getAvailableModels(): Promise<{ [name: string]: string }> {
-    const { data } = await this.openRouterClient.get<{ data: { id: string; name: string }[] }>('/models');
-
-    return data.data.reduce<{ [name: string]: string }>((acc, model) => {
-      acc[model.name] = model.id;
-      return acc;
-    }, {});
-  }
-
   private async privateGetCommitMessage(staged: string): Promise<string> {
-    const { data } = await this.openRouterClient.post('/chat/completions', {
+    const { data } = await this.openRouterClient.post<{
+      choices: { message: { content: string } }[];
+    }>('/chat/completions', {
       model: this.params.model,
       messages: [
         {
@@ -99,10 +101,10 @@ export class OpenRouterProvider {
             - docs(readme): update install
 
             Rules for you to follow: 
-            - Use only these prefixes and keep the message short and descriptive.
-            - Return only the commit message.
-            - The message your return should not be longer than 50 characters.    
-            - If the message is longer than 50 characters, try again.        
+            - Returns me 3 options to choose from.
+            - Each option must be a commit message.
+            - Each option must only these prefixes and keep the message short and descriptive.
+            - Each option must not be longer than 50 characters.
 
             Here is the staged changes:
             ${staged}
@@ -111,7 +113,9 @@ export class OpenRouterProvider {
       ],
     });
 
-    const commitMessage: string = data.choices[0].message.content;
+    const commitMessage = data.choices[0].message.content;
+
+    console.log(commitMessage);
 
     if (commitMessage.length > 50) {
       throw new CommitMessageTooLongError(commitMessage);
