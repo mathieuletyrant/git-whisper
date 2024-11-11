@@ -28,12 +28,15 @@ const generateCommitMessage = async (openRouterConfig: OpenRouterConfig, { commi
 
   try {
     const staged = gitProvider.getStagedChanges();
+    // @TODO Use the commit history from the git provider
+    const commitHistory = gitProvider.getCommitMessageHistory();
 
     console.log('🤖 Generating...');
 
     const commitMessages = await openRouterProvider.getCommitMessages(staged, {
       commitCount,
       language,
+      commitHistory,
     });
 
     // If interactive mode is enabled, prompt the user to select a commit message

@@ -8,6 +8,8 @@ export class EmptyStagedError extends Error {
 }
 
 export class GitProvider {
+  private LAST_COMMIT_COUNT = 10;
+
   /**
    * This function returns the staged changes in the git repository.
    * The function uses the `git diff --staged` command to get the staged changes.
@@ -33,5 +35,14 @@ export class GitProvider {
 
     execSync(command);
     return;
+  }
+
+  /**
+   * Get the commit history of the repository
+   */
+  public getCommitMessageHistory(): string[] {
+    const result = execSync(`git log -${this.LAST_COMMIT_COUNT} --pretty=%B`);
+
+    return result.toString().split('\n').filter(Boolean);
   }
 }

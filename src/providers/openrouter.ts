@@ -26,12 +26,26 @@ export class ParsingError extends Error {
 type GenerationOptions = {
   commitCount: number;
   language: string;
+  commitHistory: string[];
 };
 
 export class OpenRouterProvider {
   private MAX_RETRIES = 3;
 
   private openRouterClient: AxiosInstance;
+
+  private defaultCommitHistory = [
+    'feat(auth): add user authentication',
+    'fix(auth): resolve login bug',
+    'docs(readme): update installation steps',
+    'style(ui): improve button alignment',
+    'refactor(utils): simplify helper functions',
+    'test(auth): add login unit tests',
+    'chore(deps): update dependencies',
+    'feat(api): add new endpoint',
+    'fix(api): resolve 500 error',
+    'docs(api): update swagger docs',
+  ];
 
   constructor(private readonly params: { apiKey: string; model: string }) {
     this.openRouterClient = axios.create({
@@ -108,20 +122,9 @@ export class OpenRouterProvider {
             6. Example format: ["feat(auth): add user authentication", "fix(auth): resolve login bug", "docs(readme): update API docs"]
             7. Language should be in ${options.language} only
 
-            Here's a guide to writing effective commit messages:
-            - feat(auth): implement user authentication form
-            - feat(auth): add OAuth2.0 integration
-            - fix(api): resolve API request timeout
-            - fix(core): handle null pointer exception
-            - docs(readme): update installation steps
-            - docs(api): add endpoint documentation
-            - chore(deps): update dependencies
-            - style(ui): improve button alignment
-            - perf(query): optimize database queries
-            - test(auth): add login unit tests
-            - refactor(utils): simplify helper functions
-            - ci(workflow): update GitHub Actions
-
+            Here is the last ${this.defaultCommitHistory.length} commit messages (you can use them as a reference):
+            ${this.defaultCommitHistory.join('\n')}
+            
             Here is the staged changes:
             ${staged}
           `,
