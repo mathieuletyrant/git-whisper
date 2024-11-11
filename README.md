@@ -1,60 +1,59 @@
 # Git Whisper 🤖✨
 
-Git Whisper is an intelligent CLI tool that generates meaningful and consistent commit messages using AI. Stop struggling with commit message writing and let AI help you create clear, concise, and conventional commits.
+Meet Git Whisper, your AI-powered companion for crafting perfect Git commit messages. This intelligent CLI tool eliminates the hassle of writing commit messages by generating clear, conventional, and contextually relevant commits automatically.
 
-## ✨ Features
+## ✨ Key Features
 
-- 🤖 AI-powered commit message generation
-- 💡 Choose your preferred LLM (GPT-4, Claude, and more)
-- 📝 Follows conventional commit standards
-- 🚀 Simple and intuitive CLI interface
-- 🔄 Analyzes your code changes to provide context-aware messages
+- 🤖 Smart commit message generation powered by AI
+- 💡 Flexibility to choose your preferred LLM (GPT-4, Claude, and more)
+- 📝 Full compliance with conventional commit standards
+- 🚀 Clean and user-friendly CLI interface
+- 🔄 Intelligent code change analysis for context-aware messaging
 
-## 🎯 Purpose
+## 🎯 Why Git Whisper?
 
-Git Whisper aims to streamline the Git workflow by eliminating the cognitive load of writing commit messages. It helps developers maintain a consistent and professional commit history while saving time.
+Git Whisper revolutionizes your Git workflow by automating commit message creation. It helps developers maintain professional commit histories while reducing mental overhead and saving valuable time.
 
-## 🚀 Setting Up Git-Whisper
+## 🚀 Getting Started
 
-1. Install Git-Whisper globally using npm:
+1. Install globally via npm:
 
 ```bash
 npm install git-whisper -g
 ```
 
-2. Configure Git-Whisper [OpenRouter](https://openrouter.ai):
+2. Set up with [OpenRouter](https://openrouter.ai):
 
 ```bash
-# This will prompt you an input to put your apiKey
+# Enter your API key when prompted
 gw config set apiKey
 
-# This will prompt you with a list of available LLMs
+# Select your preferred LLM from available options
 gw config set model
 ```
 
-This command will create a configuration file at `~/.git-whisper/config.json` to store your API key and preferred model settings.
+Your settings will be saved automatically to `~/.git-whisper/config.json`.
 
-3. Use the CLI ❤️
+3. Start Using Git Whisper ❤️
 
 ```bash
-# Generate commit message and execute the git commit
+# Generate and execute commit message
 gw
 
-# Generate commit message with another LLM
+# Use a specific LLM for message generation
 gw --model anthropic/claude-3.5-sonnet
 
-
-# Generate 5 commit messages interactively without actually committing them (dry run).
+# Generate 5 commit messages interactively (preview only)
 gw --interactive --commitCount 5 --dry-run
 
-# See the default configuration
+# View your current configuration
 gw config view apiKey
 gw config view model
 ```
 
-## 🧪 Testing Locally
+## 🧪 Local Development
 
-To test Git Whisper locally, follow these steps:
+To set up Git Whisper for local testing:
 
 1. Build the project:
 
@@ -62,15 +61,15 @@ To test Git Whisper locally, follow these steps:
    npm run build:watch
    ```
 
-2. Link the package globally:
+2. Create global link:
 
    ```sh
    node ./dist/index.js
    ```
 
-3. You can now use the `git-whisper` or `gw` command in your terminal.
+3. Start using `git-whisper` or `gw` commands in your terminal.
 
-## 🛠️ Tech Stack
+## 🛠️ Built With
 
 - Node.js
-- OpenRouter
+- OpenRouter API
