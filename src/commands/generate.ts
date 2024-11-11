@@ -48,22 +48,25 @@ const generateCommitMessage = async (config: { apiKey: string; model: string }) 
 };
 
 export const registerGenerateCommand = (program: Command) => {
-  program.option('-m, --model <model>', 'Override the default model').action(() => {
-    const config = Config.getConfig();
-    const options = program.opts<{ model?: string }>();
+  program
+    .description('Generate a commit message based on staged changes')
+    .option('-m, --model <model>', 'Override the default model')
+    .action(() => {
+      const config = Config.getConfig();
+      const options = program.opts<{ model?: string }>();
 
-    if (!config.apiKey) {
-      console.log('Please configure an API key.');
-      console.log('➡️ gw config set apiKey <apiKey');
-      return;
-    }
+      if (!config.apiKey) {
+        console.log('Please configure an API key.');
+        console.log('➡️ gw config set apiKey <apiKey');
+        return;
+      }
 
-    if (!options.model && !config.model) {
-      console.log('Please specify a model or configure a default model.');
-      console.log('➡️ gw config set model <model>');
-      return;
-    }
+      if (!options.model && !config.model) {
+        console.log('Please specify a model or configure a default model.');
+        console.log('➡️ gw config set model <model>');
+        return;
+      }
 
-    return generateCommitMessage({ ...config, ...options });
-  });
+      return generateCommitMessage({ ...config, ...options });
+    });
 };
