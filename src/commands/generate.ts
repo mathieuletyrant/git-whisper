@@ -55,7 +55,7 @@ export const registerGenerateCommand = (program: Command) => {
   program
     .description('Generate a commit message based on staged changes')
     .option('-m, --model <model>', 'Override the default model')
-    .option('--dry-run', 'Generate the commit message without committing', false)
+    .option('-d, --dry-run', 'Generate the commit message without committing', false)
     .action(() => {
       const config = Config.getConfig();
       const options = program.opts<{ model?: string; dryRun: boolean }>();
