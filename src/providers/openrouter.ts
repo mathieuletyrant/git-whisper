@@ -105,12 +105,21 @@ export class OpenRouterProvider {
               - chore: for maintenance tasks
             3. Keep messages concise and descriptive
             4. Maximum length: 50 characters including prefix
-            5. Answer me only the commit messages in JSON Format, your answer should be a VALID JSON array of strings
-            6. Example format: ["feat(auth): add user authentication", "fix(auth): resolve login bug", "docs(readme): update API docs"]
             7. Language should be in ${options.language} only
+
+            ----------------------------
 
             Here is the last ${options.commitHistory.length} commit messages (you can use them as a reference):
             ${options.commitHistory.join('\n')}
+
+            ----------------------------
+
+            When your answer me, this is the rules you must follow:
+            1. Your response must only contains an array of string that contains commit messages
+            2. Example format: ["feat(auth): add user authentication", "fix(auth): resolve login bug", "docs(readme): update API docs"]
+            3. If you don't follow the rules, I will ask you again
+
+            ----------------------------
             
             Here is the staged changes:
             ${staged}
