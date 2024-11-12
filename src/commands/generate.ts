@@ -4,6 +4,8 @@ import pkg from 'enquirer';
 import { GitProvider, OpenRouterProvider, EmptyStagedError, ParsingError, UnknownError, NotFollowStandardError } from '../providers/index.js';
 import { Config } from '../config.js';
 
+import { CommitHistoryService } from '../services/index.js';
+
 // @ts-expect-error
 const { AutoComplete } = pkg;
 
@@ -28,7 +30,6 @@ const generateCommitMessage = async (openRouterConfig: OpenRouterConfig, { commi
 
   try {
     const staged = gitProvider.getStagedChanges();
-    // @TODO Use the commit history from the git provider
     const commitHistory = gitProvider.getCommitMessageHistory();
 
     console.log('🤖 Generating...');
@@ -36,7 +37,7 @@ const generateCommitMessage = async (openRouterConfig: OpenRouterConfig, { commi
     const commitMessages = await openRouterProvider.getCommitMessages(staged, {
       commitCount,
       language,
-      commitHistory,
+      commitHistory: CommitHistoryService.getCommitMessageHistory(commitHistory),
     });
 
     // If interactive mode is enabled, prompt the user to select a commit message

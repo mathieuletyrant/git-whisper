@@ -34,19 +34,6 @@ export class OpenRouterProvider {
 
   private openRouterClient: AxiosInstance;
 
-  private defaultCommitHistory = [
-    'feat(auth): add user authentication',
-    'fix(auth): resolve login bug',
-    'docs(readme): update installation steps',
-    'style(ui): improve button alignment',
-    'refactor(utils): simplify helper functions',
-    'test(auth): add login unit tests',
-    'chore(deps): update dependencies',
-    'feat(api): add new endpoint',
-    'fix(api): resolve 500 error',
-    'docs(api): update swagger docs',
-  ];
-
   constructor(private readonly params: { apiKey: string; model: string }) {
     this.openRouterClient = axios.create({
       baseURL: 'https://openrouter.ai/api/v1',
@@ -122,8 +109,8 @@ export class OpenRouterProvider {
             6. Example format: ["feat(auth): add user authentication", "fix(auth): resolve login bug", "docs(readme): update API docs"]
             7. Language should be in ${options.language} only
 
-            Here is the last ${this.defaultCommitHistory.length} commit messages (you can use them as a reference):
-            ${this.defaultCommitHistory.join('\n')}
+            Here is the last ${options.commitHistory.length} commit messages (you can use them as a reference):
+            ${options.commitHistory.join('\n')}
             
             Here is the staged changes:
             ${staged}
