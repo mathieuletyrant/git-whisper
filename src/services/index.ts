@@ -1,1 +1,1 @@
-export * from './git-history.js';
+export * from './commit-history.js';
