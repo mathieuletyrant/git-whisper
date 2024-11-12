@@ -25,10 +25,10 @@ npm install git-whisper -g
 2. Set up with [OpenRouter](https://openrouter.ai):
 
 ```bash
-# Enter your API key when prompted
-gw config set apiKey
+# Set your APIKey of OpenRouter
+gw config set apikey
 
-# Select your preferred LLM from available options
+# Choose LLM
 gw config set model
 ```
 
@@ -36,23 +36,14 @@ Your settings will be saved automatically to `~/.git-whisper/config.json`.
 
 3. Start Using Git Whisper ❤️
 
-```bash
-# Generate and execute commit message
-gw
-
-# Use a specific LLM for message generation
-gw --model anthropic/claude-3.5-sonnet
-
-# Generate 5 commit messages interactively (preview only)
-gw --interactive --commitCount 5 --dry-run
-
-# Generate commit in french
-gw --language french
-
-# View your current configuration
-gw config view apiKey
-gw config view model
-```
+| Command                                      | Description                                             |
+| -------------------------------------------- | ------------------------------------------------------- |
+| `gw`                                         | Generate and execute commit message                     |
+| `gw --model anthropic/claude-3.5-sonnet`     | Use a specific LLM for message generation               |
+| `gw --interactive --commitCount 5 --dry-run` | Generate 5 commit messages interactively (preview only) |
+| `gw --language french`                       | Generate commit in french                               |
+| `gw config view apiKey`                      | View your current API key configuration                 |
+| `gw config view model`                       | View your current model configuration                   |
 
 ## 🧪 Local Development
 
