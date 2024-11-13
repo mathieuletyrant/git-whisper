@@ -43,6 +43,7 @@ Your settings will be saved automatically to `~/.git-whisper/config.json`.
 | `gw --interactive --commit-count 5 --dry-run` | Generate 5 commit messages interactively (preview only) |
 | `gw --language french`                        | Generate commit in french                               |
 | `gw --auto-add`                               | Add all staged changes                                  |
+| `gw --auto-push`                              | Push on remote repository                               |
 | `gw config view apiKey`                       | View your current API key configuration                 |
 | `gw config view model`                        | View your current model configuration                   |
 
