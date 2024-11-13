@@ -46,6 +46,14 @@ export class GitProvider {
   }
 
   /**
+   * Push the changes to the remote repository
+   */
+  public push(): void {
+    execSync('git push');
+    return;
+  }
+
+  /**
    * Get the commit history of the repository
    */
   public getCommitMessageHistory(): string[] {

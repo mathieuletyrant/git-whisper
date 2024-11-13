@@ -20,12 +20,16 @@ type GenerateConfig = {
   commitCount: number;
   language: string;
   autoAdd: boolean;
+  autoPush: boolean;
 };
 
 /**
  * Command to generate a commit message based on staged changes.
  */
-const generateCommitMessage = async (openRouterConfig: OpenRouterConfig, { commitCount, dryRun, interactive, language, autoAdd }: GenerateConfig) => {
+const generateCommitMessage = async (
+  openRouterConfig: OpenRouterConfig,
+  { commitCount, dryRun, interactive, language, autoAdd, autoPush }: GenerateConfig,
+) => {
   const openRouterProvider = new OpenRouterProvider(openRouterConfig);
   const gitProvider = new GitProvider();
 
@@ -56,6 +60,11 @@ const generateCommitMessage = async (openRouterConfig: OpenRouterConfig, { commi
 
     gitProvider.commit(selectedMessage);
     console.log('✅ Commit message generated successfully.');
+
+    if (autoPush) {
+      gitProvider.push();
+      console.log('🚀 Pushed to the remote repository.');
+    }
   } catch (error) {
     if (error instanceof EmptyStagedError) {
       console.log('🚨 No staged changes found.');
@@ -96,6 +105,7 @@ export const registerGenerateCommand = (program: Command) => {
     .option('-c, --commit-count <number>', 'Number of commit messages to generate', '3')
     .option('-l, --language <language>', 'Language of the commit message', 'english')
     .option('-a, --auto-add', 'Automatically add all changes', false)
+    .option('-p, --auto-push', 'Automatically push the changes after committing', false)
     .action(() => {
       const config = Config.getConfig();
       const options = program.opts<{
@@ -105,6 +115,7 @@ export const registerGenerateCommand = (program: Command) => {
         commitCount: number;
         language: string;
         autoAdd: boolean;
+        autoPush: boolean;
       }>();
 
       if (!config.apiKey) {
@@ -122,6 +133,7 @@ export const registerGenerateCommand = (program: Command) => {
       return generateCommitMessage(
         { apiKey: config.apiKey, model: options.model || config.model },
         {
+          autoPush: options.autoPush,
           autoAdd: options.autoAdd,
           dryRun: options.dryRun,
           language: options.language,
