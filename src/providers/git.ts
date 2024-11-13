@@ -38,6 +38,14 @@ export class GitProvider {
   }
 
   /**
+   * Add all the changes in the repository
+   */
+  public addAll(): void {
+    execSync('git add .');
+    return;
+  }
+
+  /**
    * Get the commit history of the repository
    */
   public getCommitMessageHistory(): string[] {

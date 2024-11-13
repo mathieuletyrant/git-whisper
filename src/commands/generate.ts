@@ -19,21 +19,26 @@ type GenerateConfig = {
   interactive: boolean;
   commitCount: number;
   language: string;
+  autoAdd: boolean;
 };
 
 /**
  * Command to generate a commit message based on staged changes.
  */
-const generateCommitMessage = async (openRouterConfig: OpenRouterConfig, { commitCount, dryRun, interactive, language }: GenerateConfig) => {
+const generateCommitMessage = async (openRouterConfig: OpenRouterConfig, { commitCount, dryRun, interactive, language, autoAdd }: GenerateConfig) => {
   const openRouterProvider = new OpenRouterProvider(openRouterConfig);
   const gitProvider = new GitProvider();
 
   try {
+    if (autoAdd) {
+      gitProvider.addAll();
+      console.log('📦 Staged all changes.');
+    }
+
     const staged = gitProvider.getStagedChanges();
     const commitHistory = gitProvider.getCommitMessageHistory();
 
     console.log('🤖 Generating...');
-
     const commitMessages = await openRouterProvider.getCommitMessages(staged, {
       commitCount,
       language,
@@ -88,11 +93,19 @@ export const registerGenerateCommand = (program: Command) => {
     .option('-m, --model <model>', 'Override the default model')
     .option('-d, --dry-run', 'Generate the commit message without committing', false)
     .option('-i, --interactive', 'Select a commit message interactively', false)
-    .option('-c, --commitCount <number>', 'Number of commit messages to generate', '3')
+    .option('-c, --commit-count <number>', 'Number of commit messages to generate', '3')
     .option('-l, --language <language>', 'Language of the commit message', 'english')
+    .option('-a, --auto-add', 'Automatically add all changes', false)
     .action(() => {
       const config = Config.getConfig();
-      const options = program.opts<{ model?: string; dryRun: boolean; interactive: boolean; commitCount: number; language: string }>();
+      const options = program.opts<{
+        model?: string;
+        dryRun: boolean;
+        interactive: boolean;
+        commitCount: number;
+        language: string;
+        autoAdd: boolean;
+      }>();
 
       if (!config.apiKey) {
         console.log('Please configure an API key.');
@@ -109,6 +122,7 @@ export const registerGenerateCommand = (program: Command) => {
       return generateCommitMessage(
         { apiKey: config.apiKey, model: options.model || config.model },
         {
+          autoAdd: options.autoAdd,
           dryRun: options.dryRun,
           language: options.language,
           interactive: options.interactive,

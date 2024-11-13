@@ -36,14 +36,15 @@ Your settings will be saved automatically to `~/.git-whisper/config.json`.
 
 3. Start Using Git Whisper ❤️
 
-| Command                                      | Description                                             |
-| -------------------------------------------- | ------------------------------------------------------- |
-| `gw`                                         | Generate and execute commit message                     |
-| `gw --model anthropic/claude-3.5-sonnet`     | Use a specific LLM for message generation               |
-| `gw --interactive --commitCount 5 --dry-run` | Generate 5 commit messages interactively (preview only) |
-| `gw --language french`                       | Generate commit in french                               |
-| `gw config view apiKey`                      | View your current API key configuration                 |
-| `gw config view model`                       | View your current model configuration                   |
+| Command                                       | Description                                             |
+| --------------------------------------------- | ------------------------------------------------------- |
+| `gw`                                          | Generate and execute commit message                     |
+| `gw --model anthropic/claude-3.5-sonnet`      | Use a specific LLM for message generation               |
+| `gw --interactive --commit-count 5 --dry-run` | Generate 5 commit messages interactively (preview only) |
+| `gw --language french`                        | Generate commit in french                               |
+| `gw --auto-add`                               | Add all staged changes                                  |
+| `gw config view apiKey`                       | View your current API key configuration                 |
+| `gw config view model`                        | View your current model configuration                   |
 
 ## 🧪 Local Development
 
